@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击方块</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        dark: '#1F2937',
+                        light: '#F9FAFB',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .click-block {
+                @apply w-32 h-32 md:w-40 md:h-40 rounded-xl transition-all duration-300 cursor-pointer transform hover:scale-105 active:scale-95;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-dark to-gray-800 min-h-screen font-inter text-light flex flex-col items-center justify-center p-4">
+    <!-- 游戏标题 -->
+    <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent mb-6 text-shadow">
+        点击方块
+    </h1>
+    
+    <!-- 游戏区域 -->
+    <div class="max-w-md w-full bg-dark/50 backdrop-blur-md rounded-xl p-6 shadow-xl border border-gray-700/50">
+        <!-- 分数显示 -->
+        <div class="text-center mb-8">
+            <p class="text-lg text-gray-400">得分</p>
+            <p id="score" class="text-5xl font-bold text-primary">0</p>
+        </div>
+        
+        <!-- 方块 -->
+        <div id="block" class="click-block mx-auto bg-primary shadow-lg shadow-primary/30"></div>
+        
+        <!-- 游戏说明 -->
+        <p class="mt-8 text-center text-gray-400 text-sm">
+            点击方块得分，每次点击会改变颜色
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 游戏状态
+            const game = {
+                score: 0,
+                colors: ['#3B82F6', '#10B981', '#8B5CF6', '#EC4899', '#F59E0B', '#EF4444'],
+                currentColorIndex: 0
+            };
+
+            // DOM 元素
+            const elements = {
+                block: document.getElementById('block'),
+                score: document.getElementById('score')
+            };
+
+            // 更新分数
+            function updateScore() {
+                elements.score.textContent = game.score;
+            }
+
+            // 改变方块颜色
+            function changeColor() {
+                game.currentColorIndex = (game.currentColorIndex + 1) % game.colors.length;
+                const color = game.colors[game.currentColorIndex];
+                
+                elements.block.style.backgroundColor = color;
+                elements.block.style.boxShadow = `0 0 15px ${color}80`;
+            }
+
+            // 点击方块事件
+            elements.block.addEventListener('click', () => {
+                // 增加分数
+                game.score++;
+                updateScore();
+                
+                // 改变颜色
+                changeColor();
+                
+                // 添加点击动画
+                elements.block.classList.add('scale-95');
+                setTimeout(() => {
+                    elements.block.classList.remove('scale-95');
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
+    
